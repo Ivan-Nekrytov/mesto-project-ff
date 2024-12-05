@@ -16,14 +16,13 @@ function createCard(cardData, deleteCallback) {
 }
 
 function renderCards(cardsArray) {
-  const cardsList = document.querySelector(".places__list");
+  const cardsContainer = document.querySelector(".places__list");
 
   cardsArray.forEach(cardData => {
     const cardElement = createCard(cardData, deleteCard);
-    cardsList.append(cardElement);
+    cardsContainer.append(cardElement);
   });
 }
-
 
 function deleteCard(cardElement) {
   cardElement.remove();
