@@ -14,14 +14,12 @@ const hideInputError = (formElement, inputElement, validationConfig) => {
 }
 
 const checkInputValidity = (formElement, inputElement, validationConfig) => {
-  // Кастомная ошибка для patternMismatch
   if (inputElement.validity.patternMismatch && inputElement.dataset.errorMessage) {
     inputElement.setCustomValidity(inputElement.dataset.errorMessage);
   } 
   else if (inputElement.validity.valueMissing) {
     inputElement.setCustomValidity('Вы пропустили это поле.');
   } 
-  // Кастомная ошибка для поля "ссылка на картинку"
   else if (inputElement.name === 'place-link' && inputElement.validity.typeMismatch) {
     inputElement.setCustomValidity('Введите адрес сайта.');
   }

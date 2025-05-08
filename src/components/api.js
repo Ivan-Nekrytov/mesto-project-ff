@@ -6,7 +6,6 @@ const config = {
   }
 };
 
-// Функция обработки ответа
 function handleResponse(res) {
   if (res.ok) {
     return res.json();
@@ -14,14 +13,12 @@ function handleResponse(res) {
   return Promise.reject(`Ошибка: ${res.status}`);
 }
 
-// Получение карточек с сервера
 function getInitialCards() {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   }).then(handleResponse);
 }
 
-// Получение информации о пользователе
 function getUserInfo() {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
