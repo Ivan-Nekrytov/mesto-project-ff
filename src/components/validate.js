@@ -14,26 +14,22 @@ const hideInputError = (formElement, inputElement, validationConfig) => {
 };
 
 const checkInputValidity = (formElement, inputElement, validationConfig) => {
-  // Для проверки ошибок по регулярному выражению
   if (inputElement.validity.patternMismatch && inputElement.dataset.errorMessage) {
     inputElement.setCustomValidity(inputElement.dataset.errorMessage);
   } 
-  // Если поле пустое, показываем соответствующее сообщение
   else if (inputElement.validity.valueMissing) {
     inputElement.setCustomValidity('Вы пропустили это поле.');
   }
-  // Для полей, где ожидается URL, проверяем на typeMismatch
   else if (inputElement.validity.typeMismatch) {
     if (inputElement.type === 'url') {
       inputElement.setCustomValidity('Введите адрес сайта.');
     } else {
-      inputElement.setCustomValidity(inputElement.validationMessage); // Используем стандартное сообщение браузера для других ошибок
+      inputElement.setCustomValidity(inputElement.validationMessage);
     }
   } else {
     inputElement.setCustomValidity('');
   }
 
-  // Показываем ошибку, если валидность не пройдена
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage, validationConfig);
   } else {

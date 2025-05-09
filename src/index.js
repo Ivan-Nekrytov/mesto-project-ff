@@ -1,7 +1,7 @@
 import './styles/index.css';
 import { createCard, handleLikeButtonClick } from './components/card.js';
 import { openModal, closeModal } from './components/modal.js';
-import { getInitialCards, getUserInfo, updateUserInfo, addNewCard, deleteCardFromServer, updateAvatar  } from './components/api.js';
+import { getInitialCards, getUserInfo, updateUserInfo, addNewCard, updateAvatar  } from './components/api.js';
 import { enableValidation, clearValidation } from './components/validate.js';
 
 let userId;
@@ -82,7 +82,12 @@ function handleAddCardSubmit(evt) {
 
   addNewCard(newCardData)
     .then((createdCard) => {
-      const cardElement = createCard(createdCard, userId, handleLikeButtonClick, handleImageClick);
+      const cardElement = createCard(
+        createdCard, 
+        userId,
+        handleLikeButtonClick, 
+        handleImageClick
+      );
       cardsContainer.prepend(cardElement);
       closeModal(popupAddCard);
       addCardForm.reset();

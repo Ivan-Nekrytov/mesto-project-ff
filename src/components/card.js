@@ -15,12 +15,10 @@ function createCard(cardData, userId, likeCallback, imageClickCallback) {
   cardImage.alt = cardData.name;
   likeCounter.textContent = cardData.likes.length;
 
-  // Отмечаем активный лайк, если пользователь уже лайкнул
   if (cardData.likes.some(like => like._id === userId)) {
     likeButton.classList.add('card__like-button_is-active');
   }
 
-  // Показываем кнопку удаления только владельцу
   if (cardData.owner._id === userId) {
     deleteButton.addEventListener("click", () => {
       deleteCardFromServer(cardData._id)
@@ -33,12 +31,10 @@ function createCard(cardData, userId, likeCallback, imageClickCallback) {
     deleteButton.style.display = "none";
   }
 
-  // Лайк
   likeButton.addEventListener("click", () => {
     likeCallback(likeButton, likeCounter, cardData._id);
   });
 
-  // Открытие изображения
   cardImage.addEventListener("click", () => imageClickCallback(cardData));
 
   return cardElement;
@@ -61,7 +57,7 @@ function handleLikeButtonClick(likeButton, likeCounter, cardId) {
         console.log('Ошибка при постановке лайка:', err);
       });
   } else {
-    unlikeCard(cardId)
+    unlikeCard(cardId) 
       .then((updatedCard) => {
         likeButton.classList.remove('card__like-button_is-active');
         likeCounter.textContent = updatedCard.likes.length;
@@ -71,5 +67,6 @@ function handleLikeButtonClick(likeButton, likeCounter, cardId) {
       });
   }
 }
+
 
 export { createCard, deleteCard, handleLikeButtonClick };
