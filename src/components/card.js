@@ -1,6 +1,6 @@
-import { likeCard, unlikeCard } from './api.js';
+import { likeCard, unlikeCard, deleteCardFromServer } from './api.js';
 
-function createCard(cardData, userId, deleteCallback, likeCallback, imageClickCallback, confirmDeleteCallback) {
+function createCard(cardData, userId, likeCallback, imageClickCallback) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
 
@@ -13,20 +13,32 @@ function createCard(cardData, userId, deleteCallback, likeCallback, imageClickCa
   cardTitle.textContent = cardData.name;
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
-
   likeCounter.textContent = cardData.likes.length;
 
-  if (cardData.owner._id !== userId) {
-    deleteButton.style.display = "none";
-  } else {
-    deleteButton.addEventListener("click", () => confirmDeleteCallback(cardElement, cardData._id));
+  // Отмечаем активный лайк, если пользователь уже лайкнул
+  if (cardData.likes.some(like => like._id === userId)) {
+    likeButton.classList.add('card__like-button_is-active');
   }
 
+  // Показываем кнопку удаления только владельцу
+  if (cardData.owner._id === userId) {
+    deleteButton.addEventListener("click", () => {
+      deleteCardFromServer(cardData._id)
+        .then(() => cardElement.remove())
+        .catch((err) => {
+          console.log('Ошибка при удалении карточки:', err);
+        });
+    });
+  } else {
+    deleteButton.style.display = "none";
+  }
 
-  deleteButton.addEventListener("click", () => deleteCallback(cardElement));
+  // Лайк
+  likeButton.addEventListener("click", () => {
+    likeCallback(likeButton, likeCounter, cardData._id);
+  });
 
-  likeButton.addEventListener("click", () => likeCallback(likeButton, likeCounter, cardData._id));
-
+  // Открытие изображения
   cardImage.addEventListener("click", () => imageClickCallback(cardData));
 
   return cardElement;

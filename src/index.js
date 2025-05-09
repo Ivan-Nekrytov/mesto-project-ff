@@ -1,5 +1,5 @@
 import './styles/index.css';
-import { createCard, deleteCard, handleLikeButtonClick } from './components/card.js';
+import { createCard, handleLikeButtonClick } from './components/card.js';
 import { openModal, closeModal } from './components/modal.js';
 import { getInitialCards, getUserInfo, updateUserInfo, addNewCard, deleteCardFromServer, updateAvatar  } from './components/api.js';
 import { enableValidation, clearValidation } from './components/validate.js';
@@ -44,10 +44,8 @@ function renderCards(cardsArray) {
     const cardElement = createCard(
       cardData,
       userId,
-      deleteCard,
       handleLikeButtonClick,
-      handleImageClick,
-      confirmDeleteCard
+      handleImageClick
     );
     cardsContainer.append(cardElement);
   });
@@ -84,7 +82,7 @@ function handleAddCardSubmit(evt) {
 
   addNewCard(newCardData)
     .then((createdCard) => {
-      const cardElement = createCard(createdCard, userId, confirmDeleteCard, deleteCard, handleLikeButtonClick, handleImageClick);
+      const cardElement = createCard(createdCard, userId, handleLikeButtonClick, handleImageClick);
       cardsContainer.prepend(cardElement);
       closeModal(popupAddCard);
       addCardForm.reset();
@@ -138,7 +136,7 @@ Promise.all([getUserInfo(), getInitialCards()])
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
 
-    const profileImage = document.querySelector('.profile__image');
+    const profileImage = avatarEditButton;
     profileImage.style.backgroundImage = `url('${userData.avatar}')`;
 
     renderCards(cards);
@@ -151,18 +149,6 @@ profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 
 addCardForm.addEventListener('submit', handleAddCardSubmit);
 
-function confirmDeleteCard(cardElement, cardId) {
-  if (confirm('Вы уверены, что хотите удалить эту карточку?')) {
-    deleteCardFromServer(cardId)
-      .then(() => {
-        deleteCard(cardElement);
-      })
-      .catch((err) => {
-        console.log('Ошибка при удалении карточки:', err);
-      });
-  }
-}
-
 avatarEditButton.addEventListener('click', () => {
   openModal(popupAvatar);
 });
@@ -172,7 +158,7 @@ function handleAvatarSubmit(evt) {
   renderLoading(true, avatarSaveButton);
   updateAvatar(avatarInput.value)
     .then((userData) => {
-      const profileImage = document.querySelector('.profile__image');
+      const profileImage = avatarEditButton;
       profileImage.style.backgroundImage = `url('${userData.avatar}')`;
       closeModal(popupAvatar);
       avatarForm.reset();
