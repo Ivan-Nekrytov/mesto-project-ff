@@ -1,5 +1,5 @@
 import './styles/index.css';
-import { createCard, handleLikeButtonClick } from './components/card.js';
+import { createCard, handleLikeButtonClick, handleDeleteButtonClick } from './components/card.js';
 import { openModal, closeModal } from './components/modal.js';
 import { getInitialCards, getUserInfo, updateUserInfo, addNewCard, updateAvatar  } from './components/api.js';
 import { enableValidation, clearValidation } from './components/validate.js';
@@ -45,7 +45,8 @@ function renderCards(cardsArray) {
       cardData,
       userId,
       handleLikeButtonClick,
-      handleImageClick
+      handleImageClick,
+      handleDeleteButtonClick
     );
     cardsContainer.append(cardElement);
   });
@@ -86,7 +87,8 @@ function handleAddCardSubmit(evt) {
         createdCard, 
         userId,
         handleLikeButtonClick, 
-        handleImageClick
+        handleImageClick,
+        handleDeleteButtonClick
       );
       cardsContainer.prepend(cardElement);
       closeModal(popupAddCard);
@@ -141,8 +143,7 @@ Promise.all([getUserInfo(), getInitialCards()])
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
 
-    const profileImage = avatarEditButton;
-    profileImage.style.backgroundImage = `url('${userData.avatar}')`;
+    avatarEditButton.style.backgroundImage = `url('${userData.avatar}')`;
 
     renderCards(cards);
   })
@@ -156,6 +157,8 @@ addCardForm.addEventListener('submit', handleAddCardSubmit);
 
 avatarEditButton.addEventListener('click', () => {
   openModal(popupAvatar);
+  avatarForm.reset();
+  clearValidation(avatarForm, validationConfig);
 });
 
 function handleAvatarSubmit(evt) {
@@ -163,8 +166,7 @@ function handleAvatarSubmit(evt) {
   renderLoading(true, avatarSaveButton);
   updateAvatar(avatarInput.value)
     .then((userData) => {
-      const profileImage = avatarEditButton;
-      profileImage.style.backgroundImage = `url('${userData.avatar}')`;
+      avatarEditButton.style.backgroundImage = `url('${userData.avatar}')`;
       closeModal(popupAvatar);
       avatarForm.reset();
     })

@@ -16,16 +16,6 @@ const hideInputError = (formElement, inputElement, validationConfig) => {
 const checkInputValidity = (formElement, inputElement, validationConfig) => {
   if (inputElement.validity.patternMismatch && inputElement.dataset.errorMessage) {
     inputElement.setCustomValidity(inputElement.dataset.errorMessage);
-  } 
-  else if (inputElement.validity.valueMissing) {
-    inputElement.setCustomValidity('Вы пропустили это поле.');
-  }
-  else if (inputElement.validity.typeMismatch) {
-    if (inputElement.type === 'url') {
-      inputElement.setCustomValidity('Введите адрес сайта.');
-    } else {
-      inputElement.setCustomValidity(inputElement.validationMessage);
-    }
   } else {
     inputElement.setCustomValidity('');
   }
